@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#007bff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="壽司計數">
+    <meta name="description" content="邊食野邊計數，即時知道你食左幾錢! 🍣">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23007bff' width='192' height='192'/><text x='96' y='120' font-size='100' text-anchor='middle' fill='white' font-family='Arial'>🍣</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23007bff' width='180' height='180' rx='40'/><text x='90' y='135' font-size='90' text-anchor='middle' fill='white' font-family='Arial'>🍣</text></svg>">
     <title>壽司郎計數機</title>
     <style>
         :root {
@@ -142,6 +150,103 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .count-display:active {
+            background-color: #e8e8e8;
+        }
+
+        .count-input-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .count-input-dialog {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            width: 90%;
+            max-width: 300px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .count-input-dialog h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--color-text);
+        }
+
+        .count-input-dialog input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .count-input-dialog input:focus {
+            outline: none;
+            border-color: #0056b3;
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+        }
+
+        .count-input-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .count-input-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-cancel:active {
+            background-color: #d0d0d0;
+        }
+
+        .btn-confirm {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-confirm:active {
+            background-color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         /* 特別料理區域 */
@@ -163,6 +268,104 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             margin-top: 10px;
+        }
+
+        .add-item-btn {
+            width: calc(100% - 40px);
+            margin: 15px 20px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .add-item-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 123, 255, 0.08);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .add-item-btn:hover {
+            background: rgba(0, 123, 255, 0.08);
+            border-color: #0056b3;
+            color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+        }
+
+        .add-item-btn:active {
+            background: rgba(0, 123, 255, 0.12);
+            border-color: #003d82;
+            color: #003d82;
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+        }
+
+        .add-item-btn::before:hover {
+            left: 100%;
+        }
+
+        .custom-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .custom-item-info {
+            flex-grow: 1;
+        }
+
+        .custom-item-name {
+            font-size: 0.9rem;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .custom-item-amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--color-text);
+        }
+
+        .custom-item-delete {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: #e0e0e0;
+            color: #757575;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        .custom-item-delete:active {
+            background-color: #d0d0d0;
         }
 
         /* 重置按鈕 */
@@ -403,7 +606,7 @@
         <h1>🍣 香港壽司郎計數機</h1>
     </div>
 
-    <!-- 碟子區域 -->
+    <!-- 顏色碟區域 -->
     <div class="section-title">🍽️ 顏色碟</div>
 
     <div class="card">
@@ -413,7 +616,7 @@
         </div>
         <div class="controls">
             <button class="ctrl-btn btn-minus" onclick="updateCount('red', -1)">−</button>
-            <span id="red-count" class="count-display">0</span>
+            <span id="red-count" class="count-display" onclick="openCountInputModal('red')">0</span>
             <button class="ctrl-btn btn-plus" onclick="updateCount('red', 1)">+</button>
         </div>
     </div>
@@ -425,7 +628,7 @@
         </div>
         <div class="controls">
             <button class="ctrl-btn btn-minus" onclick="updateCount('silver', -1)">−</button>
-            <span id="silver-count" class="count-display">0</span>
+            <span id="silver-count" class="count-display" onclick="openCountInputModal('silver')">0</span>
             <button class="ctrl-btn btn-plus" onclick="updateCount('silver', 1)">+</button>
         </div>
     </div>
@@ -437,7 +640,7 @@
         </div>
         <div class="controls">
             <button class="ctrl-btn btn-minus" onclick="updateCount('gold', -1)">−</button>
-            <span id="gold-count" class="count-display">0</span>
+            <span id="gold-count" class="count-display" onclick="openCountInputModal('gold')">0</span>
             <button class="ctrl-btn btn-plus" onclick="updateCount('gold', 1)">+</button>
         </div>
     </div>
@@ -449,7 +652,7 @@
         </div>
         <div class="controls">
             <button class="ctrl-btn btn-minus" onclick="updateCount('black', -1)">−</button>
-            <span id="black-count" class="count-display">0</span>
+            <span id="black-count" class="count-display" onclick="openCountInputModal('black')">0</span>
             <button class="ctrl-btn btn-plus" onclick="updateCount('black', 1)">+</button>
         </div>
     </div>
@@ -459,7 +662,7 @@
 
     <div class="card">
         <div class="info">
-            <div class="price-label">特別菜單</div>
+            <div class="price-label">MENU</div>
             <div style="font-size: 0.9rem; color: #999; margin-top: 4px;">點擊查看全部特別料理</div>
         </div>
         <button class="ctrl-btn btn-plus" onclick="openSpecialDishesModal()" style="margin-left: auto;">+</button>
@@ -468,7 +671,7 @@
     <!-- 特別料理總額 -->
     <div class="card" style="background: #f9f9f9; border: 1px solid #e0e0e0;">
         <div class="info">
-            <div class="price-label">特別料理小計</div>
+            <div class="price-label">特別料理總數</div>
             <div style="font-size: 0.9rem; color: #999; margin-top: 4px;">$<span id="special-total">0</span></div>
         </div>
         <div style="font-size: 1.3rem; font-weight: bold; color: var(--color-primary);">
@@ -477,11 +680,14 @@
     </div>
 
     <!-- 其他金額輸入 -->
-    <div class="section-title">🥤 其他甜品/飲品</div>
+    <div class="section-title">🥤 其他項目(以上MENU無時人手輸入)</div>
 
     <div style="margin: 0 20px;">
-        <div class="price-label">其他金額 (總額)</div>
-        <input type="number" id="custom-amount" class="custom-input" placeholder="輸入金額 (例如: 38)" oninput="calculateTotal()">
+        <div class="price-label">其他項目：</div>
+        <div id="custom-items-list" style="margin-top: 10px; margin-bottom: 15px;">
+            <!-- 動態生成項目 -->
+        </div>
+        <button class="add-item-btn" onclick="openCustomItemModal()">+ 新增項目</button>
     </div>
 
     <!-- 重置按鈕 -->
@@ -489,28 +695,15 @@
         <button class="reset-btn" onclick="resetAll()">全部重置</button>
     </div>
 
-       <!-- Google AdMob 廣告 -->
-    <div id="ad-container">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-6203817108723849"
-             data-ad-slot="6300978111"
-             data-ad-format="horizontal"
-             data-full-width-responsive="true"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-
     <!-- 底部結算欄 -->
     <div class="footer">
         <div class="total-row">
             <div>
-                <div class="total-label">總碟數: <span id="total-plates" style="font-weight:bold; color:var(--color-text);">0</span></div>
-                <div class="total-label">食物小計: $<span id="subtotal">0</span></div>
+                <div class="total-label">總食物數目: <span id="total-plates" style="font-weight:bold; color:var(--color-text);">0</span></div>
+                <div class="total-label">淨食物總數: $<span id="subtotal">0</span></div>
             </div>
             <div class="final-price-container">
-                <div class="total-label" style="margin-bottom:0;">預計總額</div>
+                <div class="total-label" style="margin-bottom:0;">預計埋單價錢</div>
                 <div class="final-price">$<span id="grand-total">0</span></div>
             </div>
         </div>
@@ -585,6 +778,8 @@
         let counts = { red: 0, silver: 0, gold: 0, black: 0 };
         const prices = { red: 12, silver: 17, gold: 22, black: 27 };
         let specialCounts = {};
+        let customItems = [];
+        let customItemId = 0;
 
         // 初始化特別料理計數
         specialDishes.forEach(dish => {
@@ -597,6 +792,151 @@
             document.getElementById(type + '-count').innerText = counts[type];
             calculateTotal();
             if (navigator.vibrate) navigator.vibrate(30);
+        }
+
+        function openCountInputModal(type) {
+            const modal = document.createElement('div');
+            modal.className = 'count-input-modal';
+            modal.id = 'tempCountModal';
+            
+            const dialog = document.createElement('div');
+            dialog.className = 'count-input-dialog';
+            
+            const title = document.createElement('h3');
+            title.textContent = '輸入數目';
+            
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0';
+            input.value = counts[type];
+            input.placeholder = '輸入數目';
+            
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'count-input-buttons';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn-cancel';
+            cancelBtn.textContent = '取消';
+            cancelBtn.onclick = () => modal.remove();
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn-confirm';
+            confirmBtn.textContent = '確認';
+            confirmBtn.onclick = () => {
+                const newCount = parseInt(input.value) || 0;
+                if (newCount < 0) return;
+                counts[type] = newCount;
+                document.getElementById(type + '-count').innerText = counts[type];
+                calculateTotal();
+                modal.remove();
+                if (navigator.vibrate) navigator.vibrate(30);
+            };
+            
+            buttonsDiv.appendChild(cancelBtn);
+            buttonsDiv.appendChild(confirmBtn);
+            
+            dialog.appendChild(title);
+            dialog.appendChild(input);
+            dialog.appendChild(buttonsDiv);
+            modal.appendChild(dialog);
+            
+            document.body.appendChild(modal);
+            input.focus();
+            input.select();
+        }
+
+        function openCustomItemModal() {
+            const modal = document.createElement('div');
+            modal.className = 'count-input-modal';
+            
+            const dialog = document.createElement('div');
+            dialog.className = 'count-input-dialog';
+            
+            const title = document.createElement('h3');
+            title.textContent = '輸入項目金額';
+            
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0';
+            input.placeholder = '輸入金額 (例如: 30)';
+            
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'count-input-buttons';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn-cancel';
+            cancelBtn.textContent = '取消';
+            cancelBtn.onclick = () => modal.remove();
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn-confirm';
+            confirmBtn.textContent = '確認';
+            confirmBtn.onclick = () => {
+                const amount = parseFloat(input.value);
+                if (isNaN(amount) || amount < 0) {
+                    alert('請輸入有效的金額');
+                    return;
+                }
+                customItems.push({
+                    id: customItemId++,
+                    amount: amount
+                });
+                renderCustomItems();
+                calculateTotal();
+                modal.remove();
+                if (navigator.vibrate) navigator.vibrate(30);
+            };
+            
+            buttonsDiv.appendChild(cancelBtn);
+            buttonsDiv.appendChild(confirmBtn);
+            
+            dialog.appendChild(title);
+            dialog.appendChild(input);
+            dialog.appendChild(buttonsDiv);
+            modal.appendChild(dialog);
+            
+            document.body.appendChild(modal);
+            input.focus();
+        }
+
+        function deleteCustomItem(id) {
+            customItems = customItems.filter(item => item.id !== id);
+            renderCustomItems();
+            calculateTotal();
+        }
+
+        function renderCustomItems() {
+            const listDiv = document.getElementById('custom-items-list');
+            listDiv.innerHTML = '';
+            
+            customItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'custom-item';
+                
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'custom-item-info';
+                
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'custom-item-name';
+                nameDiv.textContent = '項目 ' + (customItems.indexOf(item) + 1);
+                
+                const amountDiv = document.createElement('div');
+                amountDiv.className = 'custom-item-amount';
+                amountDiv.textContent = '$' + item.amount.toFixed(0);
+                
+                infoDiv.appendChild(nameDiv);
+                infoDiv.appendChild(amountDiv);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'custom-item-delete';
+                deleteBtn.textContent = '×';
+                deleteBtn.onclick = () => deleteCustomItem(item.id);
+                
+                itemDiv.appendChild(infoDiv);
+                itemDiv.appendChild(deleteBtn);
+                
+                listDiv.appendChild(itemDiv);
+            });
         }
 
         function updateSpecialDishCount(dishId, change) {
@@ -669,10 +1009,12 @@
 
             foodTotal += specialTotal;
 
-            // 加上手動輸入的金額
-            let customInput = document.getElementById('custom-amount').value;
-            let customAmount = parseFloat(customInput) || 0;
-            foodTotal += customAmount;
+            // 加上自訂項目的金額
+            let customTotal = 0;
+            customItems.forEach(item => {
+                customTotal += item.amount;
+            });
+            foodTotal += customTotal;
 
             // 計算加服務費
             let grandTotal = Math.round(foodTotal * 1.1);
@@ -698,7 +1040,9 @@
                 specialCounts[dish.id] = 0;
             });
             
-            document.getElementById('custom-amount').value = '';
+            customItems = [];
+            customItemId = 0;
+            renderCustomItems();
             calculateTotal();
         }
 
