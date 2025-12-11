@@ -2,7 +2,7 @@
   "name": "香港壽司郎計數機",
   "short_name": "壽司計數",
   "description": "邊食野邊計數，即時知道你食左幾錢! 🍣",
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f5f5",
   "theme_color": "#007bff",
