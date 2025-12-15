@@ -9,6 +9,8 @@
     <meta name="apple-mobile-web-app-title" content="壽司朗計數機">
     <meta name="description" content="邊食野邊計數，即時知道你食左幾錢! 🍣">
     <link rel="manifest" href="manifest.json">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203817108723849"
+    crossorigin="anonymous"></script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23007bff' width='192' height='192'/><text x='96' y='120' font-size='100' text-anchor='middle' fill='white' font-family='Arial'>🍣</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23007bff' width='180' height='180' rx='40'/><text x='90' y='135' font-size='90' text-anchor='middle' fill='white' font-family='Arial'>🍣</text></svg>">
     <title>壽司郎計數機</title>
@@ -597,6 +599,28 @@
         .modal-body::-webkit-scrollbar-thumb:hover {
             background: #999;
         }
+
+        /* AdMob 廣告容器 */
+        .ad-container {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            margin: 0 20px 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-label {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -604,6 +628,17 @@
     <!-- Sticky Header -->
     <div class="header">
         <h1>🍣 香港壽司郎計數機</h1>
+    </div>
+
+    <!-- AdMob 橫幅廣告 -->
+    <div class="ad-container">
+        <div class="ad-label">廣告</div>
+        <ins class="adsbygoogle"
+            style="display:block; width:100%; max-width:320px; height:100px;"
+            data-ad-client="ca-pub-6203817108723849"
+            data-ad-slot="4454724015"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
     </div>
 
     <!-- 顏色碟區域 -->
@@ -1051,6 +1086,10 @@
 
         // 頁面加載時初始化
         calculateTotal();
+        
+        // AdMob 廣告初始化
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
     </script>
 </body>
 </html>
